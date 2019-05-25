@@ -12,18 +12,28 @@ func init() {
 }
 
 // Path ...
+type API struct {
+	API      string      `json:"api"`
+	Instance string      `json:"instance"`
+	Version  string      `json:"version"`
+	Endpoint []*Endpoint `json:"endpoints"`
+}
 type Endpoint struct {
-	API    string `json:"api"`
 	Method string `json:"method"`
 	Path   string `json:"path"`
 }
 
+type Service struct {
+	Hostname string `json:"hostname"`
+	Version  string `json:"version"`
+	IP       string `json:"ip"`
+	Port     int    `json:"port"`
+}
+
 // Manifest ....
 type Manifest struct {
-	Endpoints []*Endpoint `json:"endpoints"`
-	Hostname  string      `json:"hostname"`
-	Version   string      `json:"version"`
-	IP        string      `json:"ip"`
+	APIs    []*API  `json:"endpoints"`
+	Service Service `json:"service"`
 }
 
 // Endpoint is the structure for the output
@@ -31,7 +41,12 @@ type EndpointInstance struct {
 	Instance string `json:"instance"`
 	Hostname string `json:"hostname"`
 	IP       string `json:"ip"`
-	API      string `json:"api"`
+	Port     int    `json:"port"`
 	Method   string `json:"method"`
 	Path     string `json:"path"`
+}
+
+// Endpoint is the structure for the output
+type EndpointInstances struct {
+	Endpoints []*EndpointInstance `json:"endpoints"`
 }

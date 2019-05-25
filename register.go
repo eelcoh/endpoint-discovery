@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-// Register the service, its version and its endpoints
-func Register(version string, endpoints []*Endpoint) {
+// Register the endpoints of a the APIs a service implements,
+func Register(apis []*API, svc Service) {
 
 	var buf = new(bytes.Buffer)
 
@@ -22,7 +22,7 @@ func Register(version string, endpoints []*Endpoint) {
 
 	url := buildRegisterURL(instance)
 
-	payload := &Manifest{Endpoints: endpoints, Hostname: instance, IP: ip, Version: version}
+	payload := &Manifest{apis, svc}
 	json.NewEncoder(buf).Encode(&payload)
 
 	req, err := http.NewRequest("POST", url, buf)
@@ -50,13 +50,12 @@ func Register(version string, endpoints []*Endpoint) {
 
 // helpers
 
-func buildRegisterURL(instance string) string {
+func buildRegisterURL(service Service) string {
 	var buffer bytes.Buffer
 	buffer.WriteString("http://")
 	buffer.WriteString(endpointDiscoveryURL)
-
 	buffer.WriteString("/")
-	buffer.WriteString(instance)
+	buffer.WriteString(service.Hostname)
 	return buffer.String()
 }
 
